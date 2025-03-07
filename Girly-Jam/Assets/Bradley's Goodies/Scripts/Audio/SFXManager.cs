@@ -37,11 +37,11 @@ public class SFXManager : MonoBehaviour
         {
             //aSource.clip = audioMap.Get(name);
             aSource.PlayOneShot(audioMap.Get(name));
-            Debug.Log("Play");
+            //Debug.Log("Play");
         }
         else
         {
-            Debug.Log("Sound " + name + " not found");
+            //Debug.Log("Sound " + name + " not found");
         }
 
         void PlayAudio(string name, float pitch)
@@ -51,11 +51,11 @@ public class SFXManager : MonoBehaviour
                 //aSource.clip = audioMap.Get(name);
                 aSource.pitch = pitch;
                 aSource.PlayOneShot(audioMap.Get(name));
-                Debug.Log("Play");
+                //Debug.Log("Play");
             }
             else
             {
-                Debug.Log("Sound " + name + " not found");
+                //Debug.Log("Sound " + name + " not found");
             }
         }
     }

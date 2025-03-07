@@ -1,6 +1,5 @@
-using UnityEngine;
-using System.Collections.Generic;
 using System.Collections;
+using UnityEngine;
 public class PointManager : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -9,13 +8,17 @@ public class PointManager : MonoBehaviour
     [SerializeField] private int totalPoints;
     [SerializeField] private int clickPoints = 5;
     [SerializeField] private int passivePointsIn = 5;
-    [SerializeField] private float timeToPassivePoints = 2;
+
+    [Header("Passive Points Calc")]
+    [SerializeField] private float timeToPassivePoints = 60;
+    [SerializeField] private int vibes; //Furniture
+    [SerializeField] private int fans; //outfits
+    [SerializeField] private int gigs; //instruments
 
     [Header("Point Per Minute Variables")]
     [SerializeField] private int currentPointsPerMinute;
-    
-    
 
+    private int clickCount = 0;
 
     void Start()
     {
@@ -30,6 +33,7 @@ public class PointManager : MonoBehaviour
         {
             SFXManager.Instance.PlayAudio("Click");
             addPoints(clickPoints);
+            clickCount++;
         }
     }
 
@@ -57,7 +61,7 @@ public class PointManager : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(timeToPassivePoints);
             addPoints(passivePointsIn);
         }
     }
@@ -66,13 +70,17 @@ public class PointManager : MonoBehaviour
     {
         while (true)
         {
-            int pointMark1 = totalPoints;
-            yield return new WaitForSeconds(2);
-            int pointMark2 = totalPoints;
-            currentPointsPerMinute = (pointMark2 - pointMark1) * 30;
+            clickCount = 0;
 
+            int initialClickCount = clickCount;
+            yield return new WaitForSeconds(1);
+
+            int finalClickCount = clickCount;
+
+            int clicksInSeconds = finalClickCount - initialClickCount;
+
+            currentPointsPerMinute = ((clicksInSeconds * clickPoints) * 60) + (passivePointsIn);
+            Debug.Log("Clicks in last 1 seconds: " + clicksInSeconds);
         }
     }
-
-
 }

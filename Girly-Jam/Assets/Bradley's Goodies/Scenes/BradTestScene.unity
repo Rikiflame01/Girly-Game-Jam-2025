@@ -463,9 +463,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   totalPoints: 0
-  clickPoints: 5
+  clickPoints: 1
   passivePointsIn: 2
   timeToPassivePoints: 5
+  vibes: 0
+  fans: 0
+  gigs: 0
   currentPointsPerMinute: 0
 --- !u!1 &858196157
 GameObject:
