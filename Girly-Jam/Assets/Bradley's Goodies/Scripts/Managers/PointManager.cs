@@ -28,6 +28,7 @@ public class PointManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            SFXManager.Instance.PlayAudio("Click");
             addPoints(clickPoints);
         }
     }
