@@ -2,9 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
-#if UNITY_EDITOR
 using TMPro;
-#endif
+
 
 public class ShopManager : MonoBehaviour
 {
@@ -16,13 +15,8 @@ public class ShopManager : MonoBehaviour
     private const float doubleClickThreshold = 0.3f;
     public GameObject previewPanel;
     public Image previewImage;
-#if UNITY_EDITOR
     public TextMeshProUGUI previewText;
     public TextMeshProUGUI costText;  
-#else
-    public Text previewText; 
-    public Text costText;   
-#endif
 
     private RectTransform previewRectTransform;
 
