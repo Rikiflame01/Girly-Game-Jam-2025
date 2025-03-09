@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 public class PointManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public static PointManager Instance;
     [Header("Point Variables")]
 
     [SerializeField] private int totalPoints;
@@ -26,7 +26,18 @@ public class PointManager : MonoBehaviour
         StartCoroutine(calcAvgPointGain());
     }
 
-    // Update is called once per frame
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -47,6 +58,11 @@ public class PointManager : MonoBehaviour
         return totalPoints;
     }
 
+    public void decreasePoints(int points)
+    {
+        totalPoints -= points;
+    }
+
     public void addPoints(int points)
     {
         totalPoints += points;
@@ -55,6 +71,11 @@ public class PointManager : MonoBehaviour
     public void setPassivePoints(int points)
     {
         passivePointsIn = points;
+    }
+
+    public int GetCurrentPointsPerMinute()
+    {
+        return currentPointsPerMinute;
     }
 
     IEnumerator startPassivePoints()
@@ -80,7 +101,6 @@ public class PointManager : MonoBehaviour
             int clicksInSeconds = finalClickCount - initialClickCount;
 
             currentPointsPerMinute = ((clicksInSeconds * clickPoints) * 60) + (passivePointsIn);
-            Debug.Log("Clicks in last 1 seconds: " + clicksInSeconds);
         }
     }
 }
