@@ -125,6 +125,8 @@ public class ShopManager : MonoBehaviour
                     spawnedModel.AddComponent<BoxCollider>();
                 }
 
+                spawnedModel.AddComponent<ObjectController>();
+
                 gameObject.SetActive(false);
                 lastClickTimes.Remove(clickedButton);
             }
