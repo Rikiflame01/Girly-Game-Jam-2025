@@ -8,6 +8,7 @@ public class PointManager : MonoBehaviour
     [SerializeField] private int totalPoints;
     [SerializeField] private int clickPoints = 5;
     [SerializeField] private int passivePointsIn = 5;
+    [SerializeField] private float practicePercentageIncrease = 1;
 
     [Header("Passive Points Calc")]
     [SerializeField] private float timeToPassivePoints = 60;
@@ -24,6 +25,7 @@ public class PointManager : MonoBehaviour
     {
         StartCoroutine(startPassivePoints());
         StartCoroutine(calcAvgPointGain());
+        StartCoroutine(decreasePracticePercent());
     }
 
     void Awake()
@@ -44,8 +46,20 @@ public class PointManager : MonoBehaviour
         {
             SFXManager.Instance.PlayAudio("Click");
             addPoints(clickPoints);
+            if (practicePercentageIncrease < 2.18f)
+            {
+                practicePercentageIncrease += 0.02f;
+                practicePercentageIncrease = Mathf.Round(practicePercentageIncrease * 100f) / 100f;
+            }
             clickCount++;
         }
+
+        if (practicePercentageIncrease < 1)
+        {
+            practicePercentageIncrease = 1;
+        }
+
+
     }
 
     public void setTotalPoints(int points)
@@ -83,7 +97,8 @@ public class PointManager : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(timeToPassivePoints);
-            addPoints(passivePointsIn);
+            
+            addPoints(Mathf.RoundToInt(passivePointsIn*practicePercentageIncrease));
         }
     }
 
@@ -102,5 +117,25 @@ public class PointManager : MonoBehaviour
 
             currentPointsPerMinute = ((clicksInSeconds * clickPoints) * 60) + (passivePointsIn);
         }
+    }
+
+    IEnumerator decreasePracticePercent()
+    {
+        while (true)
+        {
+            if (practicePercentageIncrease <= 2 && practicePercentageIncrease > 1)
+            {
+                yield return new WaitForSeconds(2);
+                practicePercentageIncrease -= 0.01f;
+                practicePercentageIncrease = Mathf.Round(practicePercentageIncrease * 100f) / 100f;
+            }
+            else
+            {
+                yield return new WaitForSeconds(0.2f);
+                practicePercentageIncrease -= 0.01f;
+                practicePercentageIncrease = Mathf.Round(practicePercentageIncrease * 100f) / 100f;
+            }
+        }
+
     }
 }
