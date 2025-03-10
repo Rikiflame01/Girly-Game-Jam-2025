@@ -1,10 +1,12 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 public class PointManager : MonoBehaviour
 {
-    public static PointManager Instance;
-    [Header("Point Variables")]
 
+ public static PointManager Instance;
+    [Header("Point Variables")]
     [SerializeField] private int totalPoints;
     [SerializeField] private int clickPoints = 5;
     [SerializeField] private int passivePointsIn = 5;
@@ -19,13 +21,28 @@ public class PointManager : MonoBehaviour
     [Header("Point Per Minute Variables")]
     [SerializeField] private int currentPointsPerMinute;
 
+    [Header("Gig Timer UI")]
+    [SerializeField] private Image gigTimerRadial;
+    private float initialGigTime = 80f;
+
     private int clickCount = 0;
+    private float gigTimer = 80f;
+    private bool isGigActive = false;
+
+    public GameObject gigCompletionCanvas;
+    public TextMeshProUGUI fansEarned;
+    public TextMeshProUGUI pointsEarned;
+    public TextMeshProUGUI totalFans;
+    public TextMeshProUGUI totalVibes;
 
     void Start()
     {
         StartCoroutine(startPassivePoints());
         StartCoroutine(calcAvgPointGain());
         StartCoroutine(decreasePracticePercent());
+        StartCoroutine(UpdateVibes());
+        isGigActive = true;
+        UpdateGigTimerUI();
     }
 
     void Awake()
@@ -59,8 +76,102 @@ public class PointManager : MonoBehaviour
             practicePercentageIncrease = 1;
         }
 
+        if (isGigActive)
+        {
+            gigTimer -= Time.deltaTime;
+            UpdateGigTimerUI();
+            if (gigTimer <= 0)
+            {
+                CompleteGig();
+            }
+        }
 
+        totalFans.text = "Total Fans " + fans.ToString();
+        totalVibes.text = "Total Vibes: " + vibes.ToString();
     }
+
+    private void UpdateGigTimerUI()
+    {
+        if (gigTimerRadial != null)
+        {
+            float fillAmount = gigTimer / initialGigTime;
+            gigTimerRadial.fillAmount = fillAmount;
+        }
+    }
+
+    public void OnGigClick()
+    {
+        if (isGigActive)
+        {
+            gigTimer -= 1f;
+            UpdateGigTimerUI();
+            if (gigTimer <= 0)
+            {
+                CompleteGig();
+            }
+        }
+    }
+
+    private void CompleteGig()
+    {
+        isGigActive = false;
+        gigTimer = 80f;
+        int previousFans = fans;
+        if (fans == 0)
+        {
+            fans += 50;
+        }
+        fans *= 2;
+        addPoints(300);
+        ShowGigCompletionCanvas(300, fans - previousFans);
+        UpdateGigTimerUI();
+        SFXManager.Instance.PlayAudio("Win");
+    }
+
+    private void ShowGigCompletionCanvas(int points, int fansGained)
+    {
+        gigCompletionCanvas.SetActive(true);
+        fansEarned.text = fansGained.ToString();
+        pointsEarned.text = points.ToString();
+        StartCoroutine(HideGigCompletionCanvas());
+    }
+
+    IEnumerator HideGigCompletionCanvas()
+    {
+        yield return new WaitForSeconds(5f);
+        gigCompletionCanvas.SetActive(false);
+        isGigActive = true;
+    }
+
+    private void IncrementFans()
+    {
+        if (fans == 0)
+        {
+            fans += 100;
+        }
+        else
+        {
+            fans = Mathf.RoundToInt(fans * 1.25f);
+        }
+    }
+
+    private int CalculateFanBonus()
+    {
+        return fans / 10;
+    }
+
+    IEnumerator UpdateVibes()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(15f);
+            int objectCount = FindObjectsByType<ObjectController>(FindObjectsSortMode.None).Length;
+            vibes = objectCount * 50;
+            float multiplier = Mathf.Pow(1.10f, objectCount);
+            passivePointsIn += Mathf.RoundToInt(vibes * multiplier);
+        }
+    }
+
 
     public void setTotalPoints(int points)
     {
@@ -104,6 +215,8 @@ public class PointManager : MonoBehaviour
             yield return new WaitForSeconds(timeToPassivePoints);
             
             addPoints(Mathf.RoundToInt(passivePointsIn*practicePercentageIncrease));
+            IncrementFans();
+            addPoints(CalculateFanBonus());
         }
     }
 

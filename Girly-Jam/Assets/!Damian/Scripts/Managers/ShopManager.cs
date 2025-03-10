@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using TMPro;
+using Ricimi;
 
 
 public class ShopManager : MonoBehaviour
@@ -90,7 +91,7 @@ public class ShopManager : MonoBehaviour
             if (playerPoints >= selectedFurniture.cost)
             {
                 PointManager.Instance.decreasePoints(selectedFurniture.cost);
-
+                SFXManager.Instance.PlayAudio("Coins");
                 if (spawnZone == null || spawnZone.GetComponent<BoxCollider>() == null)
                 {
                     Debug.LogError("Spawn zone not assigned or missing BoxCollider.");
