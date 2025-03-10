@@ -92,6 +92,11 @@ public class PointManager : MonoBehaviour
         return currentPointsPerMinute;
     }
 
+    public float GetPassiveBonus() 
+    { 
+        return practicePercentageIncrease;
+    }
+
     IEnumerator startPassivePoints()
     {
         while (true)

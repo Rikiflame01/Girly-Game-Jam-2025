@@ -6,6 +6,7 @@ public class PointsUI : MonoBehaviour
 {
     public TextMeshProUGUI totalPointsText;
     public TextMeshProUGUI pointsPerMinuteText;
+    public TextMeshProUGUI bonusPointsText;
 
     void Update()
     {
@@ -13,6 +14,7 @@ public class PointsUI : MonoBehaviour
         {
             totalPointsText.text = "Total Points: " + PointManager.Instance.getTotalPoints().ToString();
             pointsPerMinuteText.text = "Points P/M: " + PointManager.Instance.GetCurrentPointsPerMinute().ToString();
+            bonusPointsText.text = "Passive Point Bonus: " + PointManager.Instance.GetPassiveBonus().ToString() + "X";
         }
     }
 }
