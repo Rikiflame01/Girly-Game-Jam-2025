@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Cardboard Box
   cost: 1
-  model: {fileID: 919132149155446097, guid: 6d5f9ecffc3dd9948b961b4f3b97c511, type: 3}
+  model: {fileID: 7409829693696817000, guid: 241c10aad55cdae4894e534550e61e25, type: 3}

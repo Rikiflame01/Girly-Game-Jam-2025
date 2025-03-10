@@ -8,4 +8,9 @@ public class CanvasManager : MonoBehaviour
     {
         shopCanvas.SetActive(true);
     }
+
+    public void CloseShop()
+    {
+        shopCanvas.SetActive(false);
+    }
 }
